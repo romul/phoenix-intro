@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Phoenix: Веб-разработка в функциональном стиле.</title>
+    <link rel="stylesheet" href="components/reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="components/reveal.js/css/theme/serif.css">
+    <link rel="stylesheet" href="components/reveal.js/lib/css/zenburn.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/main.css">
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h2>Phoenix: Веб-разработка в функциональном стиле.</h2>
+          <div>
+            <img src="images/logos.png" style="border: 0px; width: 33%; background: none; box-shadow: none; margin: 0 0 20px 0">
+          </div>
+          <h3>Роман Смирнов</h3>
+          <h4>Системный архитектор @<a href="https://speekify.com" target="_blank">Speekify</a></h4>
+          <h4><i class="fa fa-github fa-margin"></i><a href="https://github.com/romul" target="_blank">romul</a></h4>
+        </section>
+        <section>
+          <h2>Что такое Phoenix?</h2>
+          <blockquote style="width:100%">Phoenix — веб-фреймворк для Elixir.</blockquote>
+          <blockquote style="width:100%">Elixir — функциональный ЯП под BEAM.</blockquote>
+          <blockquote style="width:100%">BEAM — виртуальная машина Erlang/OTP.</blockquote>
+        </section>
+        <section>
+          <h2>Зачем ещё один фреймворк?</h2>
+          <ul>
+            <li>Удобство разработки на уровне Ruby on Rails</li>
+            <li>Стабильность Erlang/OTP</li>
+            <li>Производительность на уровне Go</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Идеалогия</h2>
+          <blockquote style="width:100%">Phoenix предоставляет удобный способ добавить взаимодействие с web в ваше приложение на Elixir.</blockquote>
+          <blockquote style="width:100%">Ответ от сервера — это запрос, пропущенный через серию последовательных трансформаций.</blockquote>
+        </section>
+        <section>
+          <h2>Plug</h2>
+          <blockquote style="width:100%">Спецификация для создания компонуемых функций для трансформации веб-запроса в ответ.</blockquote>
+        </section>
+        <section>
+          <h2>Plug.Conn</h2>
+          <img src="images/conn.ex.png" style="border: 0px; width: 60%;" />
+        </section>
+        <section>
+          <h2>Plug-функция</h2>
+          <pre><code class="elixir">(Plug.Conn.t, Plug.opts) :: Plug.Conn.t</code></pre>
+          <p>Функция принимает на вход структуру Plug.Conn и опциональные настройки и возвращает модифицировнную структуру Plug.Conn.</p>
+          <div class="fragment">
+            <h4>Пример:</h4>
+            <pre><code class="elixir">
+  @spec discard_robots(Plug.Conn.t, Keyword.t) :: Plug.Conn.t
+  def discard_robots(conn, _) do
+    user_agent = conn |> get_req_header("user-agent") |> Enum.at(0, "")
+    if UserAgent.bot?(user_agent) do
+      conn |> put_status(200) |> json("Ok") |> halt
+    else
+      conn
+    end
+  end
+            </code></pre>
+          </div>
+        </section>
+        <section>
+          <h2>Plug-модуль</h2>
+          <h4>В модуле должны быть реализованы 2 функции:</h4>
+          <ul>
+            <li><code class="elixir">init/1</code> принимает список опций и возвращает настройки, которые автоматически передаются в функцию <code class="elixir">call/2</code>
+            <pre><code class="elixir">init(Plug.opts) :: Plug.opts</code></pre>
+            </li>
+            <li><code class="elixir">call/2</code> имеет ту же сигнатуру, что и Plug-функция 
+            <pre><code class="elixir">call(Plug.Conn.t, Plug.opts) :: Plug.Conn.t</code></pre></li>
+          </ul>
+        </section>
+        <section>
+          <h2>Пример Plug-модуля</h2>
+          <pre><code class="elixir">
+  defmodule Plug.RequestId do
+    @behaviour Plug
+
+    def init(opts) do
+      Keyword.get(opts, :http_header, "x-request-id")
+    end
+
+    def call(conn, req_id_header) do
+      conn
+      |> get_request_id(req_id_header)
+      |> set_request_id(req_id_header)
+    end
+
+    # ...
+  end
+          </code></pre>
+          <div class="fragment">
+            <p>Пример вызова:</p>
+            <pre><code class="elixir">plug Plug.RequestId, http_header: "custom-request-id"</code></pre>
+          </div>
+        </section>
+        <section>
+          <h2>Цепочка Plug-ов</h2>
+          <ul>
+            <li>Endpoint</li>
+            <li>Router</li>
+            <li>Controllers</li>
+          </ul>
+
+          <div class="fragment">
+            <br /><br />
+            <pre style="width: 500px"><code class="bash">$ mix phx.new back_to_school</code></pre>
+          </div>
+        </section>
+
+        <section>
+          <h2>Endpoint</h2>
+          <img src="images/endpoint.ex.png" style="border: 0px; width: 50%;" />
+        </section>
+
+        <section>
+          <h2>Router</h2>
+          <img src="images/router.png" style="border: 0px; width: 50%;" />
+        </section>
+        
+        <section>
+          <h2>Controllers</h2>
+          <img src="images/page_controller.png" style="border: 0px; width: 50%;" />
+        </section>
+
+        <section>
+          <h2>Phoenix Channels</h2>
+          <blockquote>Позволяют осуществлять двунаправленную коммуникацию с клиентами через веб-сокеты или через long-polling для реализации soft-realtime функционала.</blockquote>
+          <div class="fragment">
+            <ul>
+              <li>Предоставляет абстракцию над PubSub</li>
+              <li>С Phoenix поставляется клиент для JavaScript</li>
+              <li>Есть клиенты для мобильных платформ <br/>(iOS, Android, Windows Mobile)</li>
+              <li>2M одновременных подключений и бродкаст за 1s</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h2>Спасибо за внимание!</h2>
+          <div class="fragment">
+            <br /><br /><br />
+            <h3>Вопросы?</h3>
+          </div>
+        </section>
+      </div>
+    </div>
+    <script src="components/headjs/dist/1.0.0/head.min.js"></script>
+    <script src="components/reveal.js/js/reveal.js"></script>
+    <script>
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+      
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // link(rel="stylesheet" href="components/reveal.js/css/print/pdf.css")
+      
+        dependencies: [
+          { src: 'components/reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'components/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'components/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'components/reveal.js/plugin/zoom-js/zoom.js', async: true },
+          { src: 'components/reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+  </body>
+</html>
