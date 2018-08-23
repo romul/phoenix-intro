@@ -43,3 +43,7 @@
 .reveal .slides section {
   top: 0px !important;
 }
+
+.reveal section img {
+  margin: 0;
+}

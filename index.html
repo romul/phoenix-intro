@@ -41,17 +41,17 @@
           <blockquote style="width:100%">Ответ от сервера — это запрос, пропущенный через серию последовательных трансформаций.</blockquote>
         </section>
         <section>
-          <h2>Plug</h2>
-          <blockquote style="width:100%">Спецификация для создания компонуемых функций для трансформации веб-запроса в ответ.</blockquote>
-        </section>
-        <section>
           <h2>Plug.Conn</h2>
           <img src="images/conn.ex.png" style="border: 0px; width: 60%;" />
         </section>
         <section>
+          <h2>Plug</h2>
+          <blockquote style="width:100%">Спецификация для создания компонуемых функций для трансформации веб-запроса в ответ.</blockquote>
+        </section>
+        <section>
           <h2>Plug-функция</h2>
           <pre><code class="elixir">(Plug.Conn.t, Plug.opts) :: Plug.Conn.t</code></pre>
-          <p>Функция принимает на вход структуру Plug.Conn и опциональные настройки и возвращает модифицировнную структуру Plug.Conn.</p>
+          <p>Функция принимает на вход структуру Plug.Conn и опциональные настройки и возвращает модифицированную структуру Plug.Conn.</p>
           <div class="fragment">
             <h4>Пример:</h4>
             <pre><code class="elixir">
@@ -123,12 +123,37 @@
 
         <section>
           <h2>Router</h2>
-          <img src="images/router.png" style="border: 0px; width: 50%;" />
+          <img src="images/router.ex.png" style="border: 0px; width: 50%;" />
         </section>
         
         <section>
-          <h2>Controllers</h2>
-          <img src="images/page_controller.png" style="border: 0px; width: 50%;" />
+          <h2>Controller</h2>
+          <img src="images/page_controller.ex.png" style="border: 0px; width: 50%;" />
+
+          <div class="fragment">
+            <pre><code class="bash">
+$ mix phx.gen.html Content Post posts name:string body:string published_at:datetime
+            </code></pre>
+          </div>
+        </section>
+        <section>
+          <h2>Controller</h2>
+          <img src="images/post_controller.ex.png" style="border: 0px; width: 50%;" />
+        </section>
+
+        <section>
+          <h2>Context</h2>
+          <img src="images/content.ex.png" style="border: 0px; width: 50%;" />
+        </section>
+
+        <section>
+          <h2>Schema</h2>
+          <img src="images/post.ex.png" style="border: 0px; width: 50%;" />
+        </section>
+
+        <section>
+          <h2>Template</h2>
+          <img src="images/index.html.eex.png" style="border: 0px; hight: 25%;" />
         </section>
 
         <section>
